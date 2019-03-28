@@ -1,0 +1,481 @@
+{
+	"info": {
+		"_postman_id": "782092a9-7e7c-4c9c-9607-40d205b0f971",
+		"name": "Testare soft",
+		"description": "this are automated tests for lab 5 soft testing",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "get student by valid id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d92fd10e-95a0-4a9c-9cf0-ce113ef38b7f",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{host}}?id=0",
+					"host": [
+						"{{host}}"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "0"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all students",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f7139319-a794-4901-ad41-e96b425786e9",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{host}}/list",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"list"
+					]
+				},
+				"description": "this request will retrive all existing students "
+			},
+			"response": []
+		},
+		{
+			"name": "get student by invalid id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "361f1ca9-1889-4c3e-a3b4-71e455dc4920",
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{host}}?id=-1",
+					"host": [
+						"{{host}}"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "-1"
+						}
+					]
+				},
+				"description": "in this request i will send an invalid id to server to get user"
+			},
+			"response": []
+		},
+		{
+			"name": "add student with valid body",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "929a5b4d-f03b-4f9c-8013-0b62cea0d428",
+						"exec": [
+							"//get size of array",
+							"host=pm.variables.get(\"host\");",
+							"host=(host+\"/list\");",
+							"",
+							"pm.sendRequest({",
+							"    url:host,",
+							"    method:\"GET\"",
+							"    ",
+							"}, function(err,res){",
+							"       pm.environment.set(\"initial_size\",res.json().length);",
+							"    });",
+							"    ",
+							"    ",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "7b29809b-93c2-4019-91d0-a5962cbdb754",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"// check if size of List<> is incremented with 1 element",
+							"",
+							"host=pm.variables.get(\"host\");",
+							"host=(host+\"/list\");",
+							"",
+							"//get size of array before request",
+							"initial_size=pm.environment.get(\"initial_size\"); ",
+							"//increment ",
+							"initial_size = initial_size+1; ",
+							"//make request",
+							"pm.sendRequest({",
+							"    url:host,",
+							"    method:\"GET\"",
+							"    ",
+							"}, function(err,res){",
+							"       pm.test(\"validate if array with stundets is incremented with 1\",function(){",
+							"           pm.expect(res.json().length).to.eql(initial_size)",
+							"       })",
+							"    });"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"goghi\",\n    \"surname\": \"goghi\",\n    \"phoneNumber\": \"1\",\n    \"address\": \"Ion goghi\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}",
+					"host": [
+						"{{host}}"
+					]
+				},
+				"description": "in this request i will send a post request with valid body of student\n"
+			},
+			"response": []
+		},
+		{
+			"name": "add stunde with invalid body",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "78ef40c4-7966-476d-a458-a33a2e42c5c4",
+						"exec": [
+							"pm.test(\"Status code is 400 \", function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"goghi\",\n    \"surname\": \"goghi\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}",
+					"host": [
+						"{{host}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "modify student with valid body",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "be645fb2-495e-4a10-8045-f5ec439ef5a6",
+						"exec": [
+							"//get initial data of student",
+							"",
+							"host=pm.variables.get(\"host\");",
+							"host=(host+\"?id=0\");",
+							"",
+							"pm.sendRequest({",
+							"    url:host,",
+							"    method:\"GET\"",
+							"    ",
+							"}, function(err,res){",
+							"       ",
+							"         pm.environment.set(\"intial_student\", res.json());",
+							"    });",
+							"    ",
+							"    ",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "c334d93d-d53a-4c4e-90a6-71a0810c8c94",
+						"exec": [
+							"//make repeat get requst to get stundet after put request",
+							"host=pm.variables.get(\"host\");",
+							"host=(host+\"?id=0\");",
+							"",
+							"pm.sendRequest({",
+							"    url:host,",
+							"    method:\"GET\"",
+							"    ",
+							"}, function(err,res){",
+							"       pm.test(\"compare student after modify\",function(){",
+							"           ",
+							"           pm.expect(res.json()).to.not.equal(pm.environment.get(\"intial_student\"))",
+							"",
+							"       })",
+							"      ",
+							"    });",
+							"    ",
+							"    "
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"goghi\",\n    \"surname\": \"goghi\",\n    \"phoneNumber\": \"1\",\n    \"address\": \"Ion goghi\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}?id=0",
+					"host": [
+						"{{host}}"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "0"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "modify student with invalid body",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "412ec46e-7cdc-48af-afa0-bafd615ebac9",
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"goghi\",\n    \"surname\": \"goghi\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}",
+					"host": [
+						"{{host}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete with valid id",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "1a79bd86-d841-44bd-820f-c020ea01e0ec",
+						"exec": [
+							"//get size of array",
+							"host=pm.variables.get(\"host\");",
+							"host=(host+\"/list\");",
+							"",
+							"pm.sendRequest({",
+							"    url:host,",
+							"    method:\"GET\"",
+							"    ",
+							"}, function(err,res){",
+							"       pm.environment.set(\"initial_size\",res.json().length);",
+							"    });",
+							"    ",
+							"    ",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "386ac50a-06e9-450e-8047-8287c72c4ea4",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"// check if size of List<> is decrement with 1 element",
+							"host=pm.variables.get(\"host\");",
+							"host=(host+\"/list\");",
+							"",
+							"//get size of array before request",
+							"initial_size=pm.environment.get(\"initial_size\"); ",
+							"//decrement ",
+							"initial_size = initial_size-1; ",
+							"//make request",
+							"pm.sendRequest({",
+							"    url:host,",
+							"    method:\"GET\"",
+							"    ",
+							"}, function(err,res){",
+							"       pm.test(\"validate if array with stundets is incremented with 1\",function(){",
+							"           pm.expect(res.json().length).to.eql(initial_size)",
+							"       })",
+							"    });"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{host}}?id=0",
+					"host": [
+						"{{host}}"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "0"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "ff8c3573-f19e-423b-8d97-af18cbfe227d",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "025a365d-cf76-4bb7-837b-dd16b3c01c96",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "1800a929-5b0f-4df0-834c-d2e81cb32e38",
+			"key": "host",
+			"value": "http://localhost:8080/student",
+			"type": "string"
+		}
+	]
+}
