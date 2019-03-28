@@ -5,3 +5,9 @@
 <p>2. got to src/main/java/com.ts.labs and run LabsApplication</p>
 <p>3. open postman and import file labs/Testare soft.postman_collection.json</p>
 <p>4. run the test  folder from postman </p>
+
+list created test and postman interface
+<img src="https://i.imgur.com/aHXnKu0.png"/>
+
+test results
+<img src="https://i.imgur.com/hdJ86pq.png"/>
